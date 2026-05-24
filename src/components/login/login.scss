@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 $primary: #29B6F6;
 $secondary: #FF6B9D;
 $dark: #1A202C;
@@ -29,7 +31,7 @@ $success: #38A169;
 
 // Left Branding Side
 .auth-branding {
-  background: linear-gradient(135deg, $primary 0%, darken($primary, 15%) 100%);
+  background: linear-gradient(135deg, $primary 0%, color.adjust($primary, $lightness: -15%) 100%);
   padding: 3rem;
   display: flex;
   align-items: center;

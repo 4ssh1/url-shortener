@@ -1,4 +1,4 @@
-@import './login.component.scss';
+@use '../login/login.scss' as login;
 
 .password-requirements {
   margin-top: 0.5rem;
@@ -10,13 +10,13 @@
   .requirements-title {
     display: block;
     font-weight: 600;
-    color: $dark;
+    color: login.$dark;
     margin-bottom: 0.5rem;
   }
 
   .requirement-item {
     display: block;
-    color: $error;
+    color: login.$error;
     margin-left: 0.5rem;
     margin-bottom: 0.25rem;
 
