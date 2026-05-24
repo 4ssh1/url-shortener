@@ -41,9 +41,7 @@
                 Shorten
               </button>
             </div>
-            @if (quickLinkForm.get('url')?.invalid && quickLinkForm.get('url')?.touched) {
-              <span class="error-text">Please enter a valid URL</span>
-            }
+            <span *ngIf="quickLinkForm.get('url')?.invalid && quickLinkForm.get('url')?.touched" class="error-text">Please enter a valid URL</span>
           </form>
 
           <div class="trust-badges">
@@ -106,12 +104,10 @@
   <section class="stats-section">
     <div class="container">
       <div class="stats-grid">
-        @for (stat of stats; track stat.label) {
-          <div class="stat-item">
-            <div class="stat-value">{{ stat.value }}</div>
-            <div class="stat-label">{{ stat.label }}</div>
-          </div>
-        }
+        <div *ngFor="let stat of stats" class="stat-item">
+          <div class="stat-value">{{ stat.value }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+        </div>
       </div>
     </div>
   </section>
@@ -125,13 +121,10 @@
       </div>
 
       <div class="features-grid">
-        @for (feature of features; track feature.title) {
-          <div class="feature-card">
-            <div class="feature-icon">{{ feature.icon }}</div>
-            <h3 class="feature-title">{{ feature.title }}</h3>
-            <p class="feature-description">{{ feature.description }}</p>
-          </div>
-        }
+        <div *ngFor="let feature of features" class="feature-card">
+          <h3 class="feature-title">{{ feature.title }}</h3>
+          <p class="feature-description">{{ feature.description }}</p>
+        </div>
       </div>
     </div>
   </section>
@@ -167,7 +160,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} URLs App. All rights reserved.</p>
+        <p>&copy; 2026 URLs App. All rights reserved.</p>
       </div>
     </div>
   </footer>
