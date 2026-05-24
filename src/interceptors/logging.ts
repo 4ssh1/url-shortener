@@ -10,11 +10,11 @@ export const loggingInterceptor: HttpInterceptorFn = (req, next) => {
       tap({
         next: (event) => {
           const elapsed = Date.now() - started;
-          console.log(`✅ ${req.method} ${req.url} - ${elapsed}ms`);
+          console.log(` ${req.method} ${req.url} - ${elapsed}ms`);
         },
         error: (error) => {
           const elapsed = Date.now() - started;
-          console.error(`❌ ${req.method} ${req.url} - ${elapsed}ms`, error);
+          console.error(` ${req.method} ${req.url} - ${elapsed}ms`, error);
         }
       })
     );
