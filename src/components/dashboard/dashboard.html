@@ -1,0 +1,252 @@
+<div class="dashboard">
+  <!-- Header / Navbar -->
+  <header class="dashboard-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <span class="logo-text">urls.app</span>
+        </div>
+        
+        <div class="header-actions">
+          <div class="user-menu">
+            <span class="user-name">{{ currentUser()?.email }}</span>
+            <button class="btn-logout" (click)="logout()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+              </svg>
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <div class="container">
+      <!-- Stats Overview -->
+      <section class="stats-section">
+        <h1 class="page-title">Your Links</h1>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">🔗</div>
+            <div class="stat-details">
+              <div class="stat-value">{{ totalLinks() }}</div>
+              <div class="stat-label">Total Links</div>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">👆</div>
+            <div class="stat-details">
+              <div class="stat-value">{{ totalClicks() }}</div>
+              <div class="stat-label">Total Clicks</div>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">⚡</div>
+            <div class="stat-details">
+              <div class="stat-value">{{ links().length > 0 ? (totalClicks() / links().length).toFixed(1) : '0' }}</div>
+              <div class="stat-label">Avg Clicks/Link</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Create New Link Section -->
+      <section class="create-link-section">
+        @if (!showCreateForm()) {
+          <button class="btn-create" (click)="toggleCreateForm()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Create New Link
+          </button>
+        } @else {
+          <div class="create-form-card">
+            <div class="form-header">
+              <h3>Create Short Link</h3>
+              <button class="btn-close" (click)="toggleCreateForm()">×</button>
+            </div>
+            
+            <form [formGroup]="createLinkForm" (ngSubmit)="onCreateLink()">
+              <div class="form-group">
+                <label class="form-label">Long URL</label>
+                <input 
+                  type="url"
+                  formControlName="url"
+                  class="form-input"
+                  [class.input-error]="createLinkForm.get('url')?.invalid && createLinkForm.get('url')?.touched"
+                  placeholder="https://example.com/very/long/url"
+                />
+                @if (createLinkForm.get('url')?.hasError('required') && createLinkForm.get('url')?.touched) {
+                  <span class="error-text">URL is required</span>
+                }
+                @if (createLinkForm.get('url')?.hasError('invalidUrl') && createLinkForm.get('url')?.touched) {
+                  <span class="error-text">Please enter a valid URL</span>
+                }
+              </div>
+
+              <div class="custom-link-toggle">
+                <label class="checkbox-label">
+                  <input 
+                    type="checkbox" 
+                    [checked]="showCustomBackHalf()"
+                    (change)="toggleCustomBackHalf()"
+                  />
+                  <span>Customize back-half</span>
+                </label>
+              </div>
+
+              @if (showCustomBackHalf()) {
+                <div class="form-group">
+                  <label class="form-label">Custom Back-Half</label>
+                  <div class="input-prefix">
+                    <span class="prefix">{{ getShortUrl('') }}</span>
+                    <input 
+                      type="text"
+                      formControlName="customBackHalf"
+                      class="form-input-with-prefix"
+                      [class.input-error]="createLinkForm.get('customBackHalf')?.invalid && createLinkForm.get('customBackHalf')?.touched"
+                      placeholder="my-link"
+                    />
+                  </div>
+                  @if (createLinkForm.get('customBackHalf')?.hasError('invalidBackHalf') && createLinkForm.get('customBackHalf')?.touched) {
+                    <span class="error-text">Only letters, numbers, hyphens and underscores allowed</span>
+                  }
+                </div>
+              }
+
+              @if (error()) {
+                <div class="alert alert-error">
+                  {{ error() }}
+                </div>
+              }
+
+              <div class="form-actions">
+                <button type="button" class="btn-secondary" (click)="toggleCreateForm()">
+                  Cancel
+                </button>
+                <button 
+                  type="submit" 
+                  class="btn-primary"
+                  [disabled]="!createLinkForm.valid || loading()"
+                >
+                  @if (loading()) {
+                    <span class="spinner"></span>
+                    Creating...
+                  } @else {
+                    Create Link
+                  }
+                </button>
+              </div>
+            </form>
+          </div>
+        }
+      </section>
+
+      <!-- Links List -->
+      <section class="links-section">
+        @if (loading() && links().length === 0) {
+          <div class="loading-state">
+            <span class="spinner-large"></span>
+            <p>Loading your links...</p>
+          </div>
+        } @else if (links().length === 0) {
+          <div class="empty-state">
+            <div class="empty-icon">🔗</div>
+            <h3>No links yet</h3>
+            <p>Create your first short link to get started</p>
+          </div>
+        } @else {
+          <div class="links-list">
+            @for (link of links(); track link.id) {
+              <div class="link-item">
+                <div class="link-main">
+                  <div class="link-info">
+                    <div class="link-short">
+                      <a [href]="getShortUrl(link.backHalf)" target="_blank" class="short-url">
+                        {{ getShortUrl(link.backHalf) }}
+                      </a>
+                      <button 
+                        class="btn-copy"
+                        (click)="copyLink(link)"
+                        [class.copied]="copiedLinkId() === link.id"
+                      >
+                        @if (copiedLinkId() === link.id) {
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="20 6 9 17 4 12"/>
+                          </svg>
+                          Copied
+                        } @else {
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                          </svg>
+                          Copy
+                        }
+                      </button>
+                    </div>
+                    <div class="link-original">
+                      <span class="original-url">{{ link.originalUrl }}</span>
+                    </div>
+                  </div>
+
+                  <div class="link-stats">
+                    <div class="stat-item">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                      </svg>
+                      <span>{{ link.createdAt | timeAgo }}</span>
+                    </div>
+                    <div class="stat-item">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </svg>
+                      <span>{{ link.clicks }} clicks</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="link-actions">
+                  <button 
+                    class="btn-action"
+                    (click)="viewAnalytics(link.id)"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <line x1="18" y1="20" x2="18" y2="10"/>
+                      <line x1="12" y1="20" x2="12" y2="4"/>
+                      <line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                    Analytics
+                  </button>
+                  <button 
+                    class="btn-action btn-delete"
+                    (click)="deleteLink(link.id)"
+                    [disabled]="deletingLinkId() === link.id"
+                  >
+                    @if (deletingLinkId() === link.id) {
+                      <span class="spinner-small"></span>
+                    } @else {
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                      </svg>
+                      Delete
+                    }
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </section>
+    </div>
+  </main>
+</div>
