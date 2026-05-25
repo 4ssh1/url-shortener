@@ -2,7 +2,7 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap, catchError, throwError, BehaviorSubject } from 'rxjs';
-import { environment } from '../env/environment';
+import { environment } from '@/env/environment';
 import {
   User,
   AuthResponse,
@@ -170,25 +170,25 @@ export class AuthService {
   }
 
   private clearAuth(): void {
-    localStorage.removeItem(environment.tokenKey);
-    localStorage.removeItem(environment.refreshTokenKey);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     this.currentUserSignal.set(null);
   }
 
   getAccessToken(): string | null {
-    return localStorage.getItem(environment.tokenKey);
+    return localStorage.getItem("accessToken");
   }
 
   private setAccessToken(token: string): void {
-    localStorage.setItem(environment.tokenKey, token);
+    localStorage.setItem("accessToken", token);
   }
 
   getRefreshToken(): string | null {
-    return localStorage.getItem(environment.refreshTokenKey);
+    return localStorage.getItem("refreshToken");
   }
 
   private setRefreshToken(token: string): void {
-    localStorage.setItem(environment.refreshTokenKey, token);
+    localStorage.setItem("refreshToken", token);
   }
 
   private decodeToken(token: string): User {

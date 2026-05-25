@@ -1,4 +1,5 @@
-// Color Variables
+@use 'sass:color';
+
 $primary: #29B6F6;
 $secondary: #FF6B9D;
 $dark: #1A202C;
@@ -144,7 +145,7 @@ $success: #38A169;
   .btn-create {
     width: 100%;
     padding: 1.25rem;
-    background: linear-gradient(135deg, $primary 0%, darken($primary, 10%) 100%);
+    background: linear-gradient(135deg, $primary 0%, color.adjust($primary, $lightness: -10%) 100%);
     color: white;
     border: none;
     border-radius: 12px;
@@ -343,7 +344,7 @@ $success: #38A169;
         gap: 0.5rem;
 
         &:hover:not(:disabled) {
-          background: darken($primary, 10%);
+          background: color.adjust($primary, $lightness: -10%);
           transform: translateY(-2px);
         }
 
@@ -436,7 +437,7 @@ $success: #38A169;
           transition: color 0.2s;
 
           &:hover {
-            color: darken($primary, 15%);
+            color: color.adjust($primary, $lightness: -15%);
           }
         }
 

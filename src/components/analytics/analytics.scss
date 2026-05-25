@@ -1,4 +1,5 @@
-// Color Variables
+@use 'sass:color';
+
 $primary: #29B6F6;
 $secondary: #FF6B9D;
 $accent: #FFA06B;
@@ -118,7 +119,7 @@ $error: #E53E3E;
     transition: all 0.3s;
 
     &:hover {
-      background: darken($primary, 10%);
+      background: color.adjust($primary, $lightness: -10%);
     }
   }
 }
@@ -148,7 +149,7 @@ $error: #E53E3E;
           transition: color 0.2s;
 
           &:hover {
-            color: darken($primary, 15%);
+            color: color.adjust($primary, $lightness: -15%);
           }
         }
 
@@ -336,7 +337,7 @@ $error: #E53E3E;
 
         .bar-fill {
           width: 100%;
-          background: linear-gradient(180deg, $primary 0%, darken($primary, 10%) 100%);
+          background: linear-gradient(180deg, $primary 0%, color.adjust($primary, $lightness: -10%) 100%);
           border-radius: 4px 4px 0 0;
           transition: height 0.3s;
           min-height: 4px;
@@ -405,17 +406,17 @@ $error: #E53E3E;
 
         .list-bar {
           height: 100%;
-          background: linear-gradient(90deg, $primary 0%, darken($primary, 10%) 100%);
+          background: linear-gradient(90deg, $primary 0%, color.adjust($primary, $lightness: -10%) 100%);
           border-radius: 12px;
           transition: width 0.3s;
           min-width: 2%;
 
           &.device {
-            background: linear-gradient(90deg, $secondary 0%, darken($secondary, 10%) 100%);
+            background: linear-gradient(90deg, $secondary 0%, color.adjust($secondary, $lightness: -10%) 100%);
           }
 
           &.browser {
-            background: linear-gradient(90deg, $accent 0%, darken($accent, 10%) 100%);
+            background: linear-gradient(90deg, $accent 0%, color.adjust($accent, $lightness: -10%) 100%);
           }
         }
       }

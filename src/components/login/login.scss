@@ -293,7 +293,7 @@ $success: #38A169;
       transition: color 0.2s;
 
       &:hover {
-        color: darken($primary, 10%);
+        color: color.adjust($primary, $lightness: -10%);
       }
     }
   }
@@ -315,7 +315,7 @@ $success: #38A169;
     gap: 0.5rem;
 
     &:hover:not(:disabled) {
-      background: darken($primary, 10%);
+      background: color.adjust($primary, $lightness: -10%);
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba($primary, 0.3);
     }
@@ -353,7 +353,7 @@ $success: #38A169;
       transition: color 0.2s;
 
       &:hover {
-        color: darken($primary, 10%);
+        color: color.adjust($primary, $lightness: -10%);
       }
     }
   }
