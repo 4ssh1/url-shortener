@@ -195,8 +195,8 @@
               <div class="link-card-row">
                 <div class="link-main-details">
                   <div class="link-url-block">
-                    <a [href]="getShortUrl(link.backHalf)" target="_blank" class="short-url">
-                      {{ getShortUrl(link.backHalf) }}
+                    <a [href]="link.shortLink" target="_blank" class="short-url">
+                      {{ link.shortLink }}
                     </a>
                     
                     <button 
@@ -220,7 +220,7 @@
                   </div>
                   
                   <div class="link-original-block">
-                    <span class="original-url-text">{{ link.originalUrl }}</span>
+                    <span class="original-url-text">{{ link.destination }}</span>
                   </div>
                 </div>
 
@@ -234,7 +234,7 @@
                   </div>
                   
                   <div class="meta-item clicks-badge">
-                    <span class="click-count-number">{{ link.clicks }}</span>
+                    <span class="click-count-number">{{ link.totalVisitCount }}</span>
                     <span class="click-count-label">clicks</span>
                   </div>
                 </div>

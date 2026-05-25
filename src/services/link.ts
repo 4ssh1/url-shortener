@@ -35,7 +35,7 @@ export class LinkService {
   // Computed signals
   totalLinks = computed(() => this.linksSignal().length);
   totalClicks = computed(() => 
-    this.linksSignal().reduce((sum, link) => sum + link.clicks, 0)
+    this.linksSignal().reduce((sum, link) => sum + link.totalVisitCount, 0)
   );
   recentLinks = computed(() => 
     this.linksSignal().slice(0, 5)
@@ -86,9 +86,9 @@ export class LinkService {
     return this.http.delete<DeleteLinkResponse>(`${environment.apiUrl}/links/${linkId}`).pipe(
       tap(response => {
         if (response.success) {
-          this.linksSignal.update(links => links.filter(link => link.id !== linkId));
+          this.linksSignal.update(links => links.filter(link => link._id !== linkId));
           
-          if (this.selectedLinkSignal()?.id === linkId) {
+          if (this.selectedLinkSignal()?._id === linkId) {
             this.selectedLinkSignal.set(null);
             this.analyticsSignal.set(null);
           }
@@ -112,7 +112,7 @@ export class LinkService {
         if (response.success) {
           this.analyticsSignal.set(response.data);
           
-          const link = this.linksSignal().find(l => l.id === linkId);
+          const link = this.linksSignal().find(l => l._id === linkId);
           if (link) {
             this.selectedLinkSignal.set(link);
           }

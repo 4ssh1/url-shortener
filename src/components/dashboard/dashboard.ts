@@ -50,7 +50,17 @@ export class DashboardComponent implements OnInit {
   }
 
   loadLinks(): void {
-    this.linkService.getMyLinks().subscribe();
+    this.linkService.getMyLinks().subscribe({
+      next: () => {
+        console.log('Links loaded:', this.links());
+        console.log('Total clicks:', this.totalClicks());
+        const avgClicks = this.links().length > 0 ? (this.totalClicks() / this.links().length).toFixed(1) : '0';
+        console.log('Average clicks per link:', avgClicks);
+      },
+      error: (error) => {
+        console.error('Error loading links:', error);
+      }
+    });
   }
 
   toggleCreateForm(): void {

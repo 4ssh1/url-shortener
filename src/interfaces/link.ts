@@ -1,9 +1,9 @@
 export interface Link {
   _id: string;
-  originalUrl: string;
-  shortUrl: string;
+  destination: string;
+  shortLink: string;
   backHalf: string;
-  clicks: number;
+  totalVisitCount: number;
   userId: string;
   createdAt: string;
   updatedAt: string;

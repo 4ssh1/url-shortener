@@ -111,17 +111,10 @@ export class AuthService {
   }
 
   refreshToken(): Observable<RefreshTokenResponse> {
-    const refreshToken = this.getRefreshToken();
-    
-    if (!refreshToken) {
-      this.clearAuth();
-      return throwError(() => new Error('No refresh token available'));
-    }
-
     this.refreshTokenInProgress$.next(true);
 
-    return this.http.post<RefreshTokenResponse>(`${environment.apiUrl}/auth/refresh`, {
-      refreshToken
+    return this.http.post<RefreshTokenResponse>(`${environment.apiUrl}/auth/refresh`, {}, {
+      withCredentials: true
     }).pipe(
       tap(response => {
         if (response.success) {
@@ -176,7 +169,6 @@ export class AuthService {
 
   private handleAuthSuccess(response: AuthResponse): void {
     this.setAccessToken(response.data.accessToken);
-    this.setRefreshToken(response.data.refreshToken);
     this.currentUserSignal.set(response.data.user);
     this.loadingSignal.set(false);
     this.router.navigate(['/dashboard']);
@@ -185,7 +177,6 @@ export class AuthService {
   private clearAuth(): void {
     if (this.isBrowser) {
       localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
     }
     this.currentUserSignal.set(null);
   }
@@ -204,16 +195,10 @@ export class AuthService {
   }
 
   getRefreshToken(): string | null {
-    if (this.isBrowser) {
-      return localStorage.getItem("refreshToken");
-    }
     return null;
   }
 
   private setRefreshToken(token: string): void {
-    if (this.isBrowser) {
-      localStorage.setItem("refreshToken", token);
-    }
   }
 
   private decodeToken(token: string): User {
