@@ -95,7 +95,7 @@ export class DashboardComponent implements OnInit {
     const success = await this.linkService.copyToClipboard(shortUrl);
     
     if (success) {
-      this.copiedLinkId.set(link.id);
+      this.copiedLinkId.set(link._id);
       setTimeout(() => this.copiedLinkId.set(null), 2000);
     }
   }

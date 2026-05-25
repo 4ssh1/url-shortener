@@ -126,6 +126,14 @@ export class AuthService {
       tap(response => {
         if (response.success) {
           this.setAccessToken(response.data.accessToken);
+          
+          try {
+            const user = this.decodeToken(response.data.accessToken);
+            this.currentUserSignal.set(user);
+          } catch (e) {
+            console.error('Failed to parse user payload from refreshed token:', e);
+          }
+
           this.refreshTokenInProgress$.next(false);
         }
       }),

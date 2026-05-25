@@ -1,17 +1,16 @@
 <div class="dashboard">
-  <!-- Header / Navbar -->
   <header class="dashboard-header">
     <div class="container">
       <div class="header-content">
         <div class="logo">
-          <span class="logo-text">urls.app</span>
+          <span class="logo-text">Snapit</span>
         </div>
         
         <div class="header-actions">
           <div class="user-menu">
             <span class="user-name">{{ currentUser()?.email }}</span>
             <button class="btn-logout" (click)="logout()">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
               </svg>
               Logout
@@ -22,60 +21,39 @@
     </div>
   </header>
 
-  <!-- Main Content -->
   <main class="dashboard-main">
     <div class="container">
-      <!-- Stats Overview -->
-      <section class="stats-section">
+      
+      <div class="dashboard-top-bar">
         <h1 class="page-title">Your Links</h1>
         
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon">🔗</div>
-            <div class="stat-details">
-              <div class="stat-value">{{ totalLinks() }}</div>
-              <div class="stat-label">Total Links</div>
-            </div>
-          </div>
-          
-          <div class="stat-card">
-            <div class="stat-icon">👆</div>
-            <div class="stat-details">
-              <div class="stat-value">{{ totalClicks() }}</div>
-              <div class="stat-label">Total Clicks</div>
-            </div>
-          </div>
-          
-          <div class="stat-card">
-            <div class="stat-icon">⚡</div>
-            <div class="stat-details">
-              <div class="stat-value">{{ links().length > 0 ? (totalClicks() / links().length).toFixed(1) : '0' }}</div>
-              <div class="stat-label">Avg Clicks/Link</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Create New Link Section -->
-      <section class="create-link-section">
         @if (!showCreateForm()) {
-          <button class="btn-create" (click)="toggleCreateForm()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <button class="btn-create-trigger" (click)="toggleCreateForm()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <line x1="12" y1="5" x2="12" y2="19"/>
               <line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
             Create New Link
           </button>
-        } @else {
+        }
+      </div>
+
+      @if (showCreateForm()) {
+        <section class="create-link-section">
           <div class="create-form-card">
             <div class="form-header">
               <h3>Create Short Link</h3>
-              <button class="btn-close" (click)="toggleCreateForm()">×</button>
+              <button class="btn-close" (click)="toggleCreateForm()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
             </div>
             
             <form [formGroup]="createLinkForm" (ngSubmit)="onCreateLink()">
               <div class="form-group">
-                <label class="form-label">Long URL</label>
+                <label class="form-label">Destination URL</label>
                 <input 
                   type="url"
                   formControlName="url"
@@ -98,21 +76,22 @@
                     [checked]="showCustomBackHalf()"
                     (change)="toggleCustomBackHalf()"
                   />
-                  <span>Customize back-half</span>
+                  <span class="checkbox-custom"></span>
+                  <span class="checkbox-text">Customize link back-half</span>
                 </label>
               </div>
 
               @if (showCustomBackHalf()) {
-                <div class="form-group">
-                  <label class="form-label">Custom Back-Half</label>
-                  <div class="input-prefix">
-                    <span class="prefix">{{ getShortUrl('') }}</span>
+                <div class="form-group animate-fade-in">
+                  <label class="form-label">Custom Alias</label>
+                  <div class="input-prefix-container">
+                    <span class="prefix-addon">{{ getShortUrl('') }}</span>
                     <input 
                       type="text"
                       formControlName="customBackHalf"
                       class="form-input-with-prefix"
                       [class.input-error]="createLinkForm.get('customBackHalf')?.invalid && createLinkForm.get('customBackHalf')?.touched"
-                      placeholder="my-link"
+                      placeholder="custom-name"
                     />
                   </div>
                   @if (createLinkForm.get('customBackHalf')?.hasError('invalidBackHalf') && createLinkForm.get('customBackHalf')?.touched) {
@@ -138,7 +117,7 @@
                 >
                   @if (loading()) {
                     <span class="spinner"></span>
-                    Creating...
+                    Creating Link...
                   } @else {
                     Create Link
                   }
@@ -146,99 +125,141 @@
               </div>
             </form>
           </div>
-        }
+        </section>
+      }
+
+      <section class="stats-section">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <span class="stat-label">Total Links</span>
+              <div class="stat-icon-wrapper">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+                  <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value">{{ totalLinks() }}</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <span class="stat-label">Total Clicks</span>
+              <div class="stat-icon-wrapper">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value">{{ totalClicks() }}</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <span class="stat-label">Avg Clicks / Link</span>
+              <div class="stat-icon-wrapper">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="20" x2="18" y2="10"/>
+                  <line x1="12" y1="20" x2="12" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value">{{ links().length > 0 ? (totalClicks() / links().length).toFixed(1) : '0' }}</div>
+          </div>
+        </div>
       </section>
 
-      <!-- Links List -->
       <section class="links-section">
         @if (loading() && links().length === 0) {
           <div class="loading-state">
             <span class="spinner-large"></span>
-            <p>Loading your links...</p>
+            <p>Loading your link database...</p>
           </div>
         } @else if (links().length === 0) {
           <div class="empty-state">
-            <div class="empty-icon">🔗</div>
-            <h3>No links yet</h3>
-            <p>Create your first short link to get started</p>
+            <div class="empty-icon-box">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+                <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+              </svg>
+            </div>
+            <h3>No shortened links yet</h3>
+            <p>Generate your first clean routing alias to see real-time analytics data.</p>
           </div>
         } @else {
           <div class="links-list">
-            @for (link of links(); track link.id) {
-              <div class="link-item">
-                <div class="link-main">
-                  <div class="link-info">
-                    <div class="link-short">
-                      <a [href]="getShortUrl(link.backHalf)" target="_blank" class="short-url">
-                        {{ getShortUrl(link.backHalf) }}
-                      </a>
-                      <button 
-                        class="btn-copy"
-                        (click)="copyLink(link)"
-                        [class.copied]="copiedLinkId() === link.id"
-                      >
-                        @if (copiedLinkId() === link.id) {
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <polyline points="20 6 9 17 4 12"/>
-                          </svg>
-                          Copied
-                        } @else {
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
-                          </svg>
-                          Copy
-                        }
-                      </button>
-                    </div>
-                    <div class="link-original">
-                      <span class="original-url">{{ link.originalUrl }}</span>
-                    </div>
+            @for (link of links(); track link._id) {
+              <div class="link-card-row">
+                <div class="link-main-details">
+                  <div class="link-url-block">
+                    <a [href]="getShortUrl(link.backHalf)" target="_blank" class="short-url">
+                      {{ getShortUrl(link.backHalf) }}
+                    </a>
+                    
+                    <button 
+                      class="btn-copy-badge"
+                      (click)="copyLink(link)"
+                      [class.copied]="copiedLinkId() === link._id"
+                    >
+                      @if (copiedLinkId() === link._id) {
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <span>Copied</span>
+                      } @else {
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                          <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                        </svg>
+                        <span>Copy</span>
+                      }
+                    </button>
                   </div>
-
-                  <div class="link-stats">
-                    <div class="stat-item">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <circle cx="12" cy="12" r="10"/>
-                        <polyline points="12 6 12 12 16 14"/>
-                      </svg>
-                      <span>{{ link.createdAt | timeAgo }}</span>
-                    </div>
-                    <div class="stat-item">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                        <circle cx="12" cy="12" r="3"/>
-                      </svg>
-                      <span>{{ link.clicks }} clicks</span>
-                    </div>
+                  
+                  <div class="link-original-block">
+                    <span class="original-url-text">{{ link.originalUrl }}</span>
                   </div>
                 </div>
 
-                <div class="link-actions">
-                  <button 
-                    class="btn-action"
-                    (click)="viewAnalytics(link.id)"
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <line x1="18" y1="20" x2="18" y2="10"/>
-                      <line x1="12" y1="20" x2="12" y2="4"/>
-                      <line x1="6" y1="20" x2="6" y2="14"/>
+                <div class="link-metadata-metrics">
+                  <div class="meta-item timeline">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span>{{ link.createdAt | timeAgo }}</span>
+                  </div>
+                  
+                  <div class="meta-item clicks-badge">
+                    <span class="click-count-number">{{ link.clicks }}</span>
+                    <span class="click-count-label">clicks</span>
+                  </div>
+                </div>
+
+                <div class="link-action-buttons">
+                  <button class="btn-action-util primary-action" (click)="viewAnalytics(link._id)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M3 3v18h18"/>
+                      <path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/>
                     </svg>
                     Analytics
                   </button>
+                  
                   <button 
-                    class="btn-action btn-delete"
-                    (click)="deleteLink(link.id)"
-                    [disabled]="deletingLinkId() === link.id"
+                    class="btn-action-util danger-action"
+                    (click)="deleteLink(link._id)"
+                    [disabled]="deletingLinkId() === link._id"
                   >
-                    @if (deletingLinkId() === link.id) {
-                      <span class="spinner-small"></span>
+                    @if (deletingLinkId() === link._id) {
+                      <span class="spinner-inline"></span>
                     } @else {
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <polyline points="3 6 5 6 21 6"/>
                         <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
                       </svg>
-                      Delete
                     }
                   </button>
                 </div>
