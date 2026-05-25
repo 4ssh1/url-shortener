@@ -27,7 +27,7 @@ export class LandingComponent {
     },
     {
       title: 'Secure & Private',
-      description: 'Your data is encrypted and protected with enterprise-grade security'
+      description: 'Your data is protected with enterprise-grade security'
     },
     {
       title: 'Custom Links',

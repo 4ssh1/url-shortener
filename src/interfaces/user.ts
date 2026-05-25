@@ -1,7 +1,8 @@
 export interface User {
   id: string;
   email: string;
-  name?: string;
+  firstName?: string;
+  lastName?: string;
   role: 'user' | 'admin';
   createdAt?: string;
   updatedAt?: string;
@@ -25,7 +26,8 @@ export interface LoginCredentials {
 export interface SignupCredentials {
   email: string;
   password: string;
-  name?: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 export interface RefreshTokenResponse {

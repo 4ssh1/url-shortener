@@ -1,154 +1,167 @@
 <div class="landing-page">
-  <!-- Hero Section -->
   <section class="hero">
     <div class="container">
       <nav class="navbar">
         <div class="logo">
-          <span class="logo-text">urls.app</span>
+          <span class="logo-text">Snapit</span>
+        </div>
+        <div class="nav-links-center">
+          <a routerLink="/" class="nav-link">HOME</a>
+          <button (click)="scrollToFeatures()" class="nav-link-btn">FEATURES</button>
         </div>
         <div class="nav-actions">
-          <a routerLink="/auth/login" class="btn-text">Sign In</a>
-          <a routerLink="/auth/signup" class="btn-primary">Get Started</a>
+          <a routerLink="/auth/login" class="btn-text">Login</a>
+          <a routerLink="/auth/signup" class="btn-primary">Register</a>
         </div>
       </nav>
 
       <div class="hero-content">
-        <div class="hero-left">
+        <div class="hero-center-text">
           <h1 class="hero-title">
-            <span class="title-line">shorten.</span>
-            <span class="title-line">share.</span>
-            <span class="title-line highlight">see it <span class="highlight-secondary">all.</span></span>
+            Make Your URL <span class="highlight-badge">Short</span><br>
+            Branded And Practical
           </h1>
 
           <p class="hero-description">
-            Turn long, ugly URLs into clean short links you can share anywhere. 
-            Watch every click come in, in real time.
+            Link Management Platform with all features you need in one place. Shorten, brand, manage and track your links the easy way.
           </p>
 
-          <form [formGroup]="quickLinkForm" (ngSubmit)="onQuickShorten()" class="quick-shorten-form">
-            <div class="input-group">
-              <input 
-                type="url" 
-                formControlName="url"
-                placeholder="Paste your long URL here..."
-                class="url-input"
-              />
-              <button 
-                type="submit" 
-                class="btn-shorten"
-                [disabled]="!quickLinkForm.valid || isGenerating()"
-              >
-                Shorten
-              </button>
-            </div>
-            <span *ngIf="quickLinkForm.get('url')?.invalid && quickLinkForm.get('url')?.touched" class="error-text">Please enter a valid URL</span>
-          </form>
-
-          <div class="trust-badges">
-            <span class="badge">🔒 Secure</span>
-            <span class="badge">⚡ Fast</span>
-            <span class="badge">📊 Analytics</span>
+          <div class="hero-cta-wrapper">
+            <a routerLink="/auth/signup" class="btn-hero-main">Register For Free!</a>
           </div>
         </div>
 
-        <div class="hero-right">
-          <div class="visual-elements">
-            <div class="floating-card card-link">
-              <div class="card-header">
-                <span class="dot red"></span>
-                <span class="dot yellow"></span>
-                <span class="dot green"></span>
-              </div>
-              <div class="card-content">
-                <div class="url-bar">urls.app/<span class="highlight-text">launch</span></div>
-              </div>
+        <div class="hero-visual-wrapper">
+          <div class="mockup-container">
+            <div class="search-bar-mock">
+              <span class="search-icon">🔍</span>
+              <div class="search-line"></div>
             </div>
-
-            <div class="floating-card card-analytics">
-              <div class="mini-chart">
-                <div class="bar" style="height: 40%"></div>
-                <div class="bar" style="height: 70%"></div>
-                <div class="bar" style="height: 90%"></div>
+            <div class="illustration-window">
+              <div class="window-header">
+                <div class="win-circle"></div>
+                <div class="win-circle"></div>
+              </div>
+              <div class="window-body">
+                <div class="orange-card-mock"></div>
               </div>
             </div>
-
-            <div class="link-icon">
-              <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M60 20C45 20 35 30 35 45C35 50 37 54 40 58L50 68C54 72 60 75 67 75C82 75 92 65 92 50C92 45 90 41 87 37L77 27C73 23 67 20 60 20Z" fill="url(#gradient1)" opacity="0.8"/>
-                <path d="M60 100C75 100 85 90 85 75C85 70 83 66 80 62L70 52C66 48 60 45 53 45C38 45 28 55 28 70C28 75 30 79 33 83L43 93C47 97 53 100 60 100Z" fill="url(#gradient2)" opacity="0.8"/>
-                <defs>
-                  <linearGradient id="gradient1" x1="35" y1="20" x2="92" y2="75">
-                    <stop offset="0%" stop-color="#FF6B9D"/>
-                    <stop offset="100%" stop-color="#FFA06B"/>
-                  </linearGradient>
-                  <linearGradient id="gradient2" x1="28" y1="45" x2="85" y2="100">
-                    <stop offset="0%" stop-color="#4FC3F7"/>
-                    <stop offset="100%" stop-color="#29B6F6"/>
-                  </linearGradient>
-                </defs>
-              </svg>
+            <div class="avatar-mock">
+              <div class="avatar-hair"></div>
+              <div class="avatar-shirt"></div>
             </div>
-
-            <div class="cursor-icon">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                <path d="M3 3L10.07 19.97L12.58 12.58L19.97 10.07L3 3Z" fill="#29B6F6"/>
-              </svg>
-            </div>
+            <div class="tea-cup">☕</div>
           </div>
+          
+          <div class="decor-shape shape-left"></div>
+          <div class="decor-shape shape-right"></div>
+          <svg class="decor-line" width="400" height="200" viewBox="0 0 400 200" fill="none">
+            <path d="M10 100 Q 100 20, 200 100 T 390 100" stroke="#718096" stroke-width="1.5" stroke-dasharray="4 4" fill="none"/>
+          </svg>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Features Section -->
+  <section class="short-intro-section">
+    <div class="container">
+      <div class="intro-grid">
+        <div class="intro-left-charts">
+          <div class="analytics-floating-card click-card">
+            <span class="card-label">Number of Click</span>
+            <span class="card-date">Mar 27 - Apr 02</span>
+            <div class="donut-chart-mock">
+              <div class="inner-circle">
+                <span class="pct-label">76.88%</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="analytics-floating-card engagement-card">
+            <span class="big-stat-val">86.5%</span>
+            <span class="card-label">Engagement</span>
+            <span class="stat-trend positive">▲ 20.03%</span>
+          </div>
+        </div>
+
+        <div class="intro-right-text">
+          <h2 class="intro-title">SHORT IS BETTER </h2>
+          <p class="intro-p">
+            Your url is the first impression you give of yourself and your company on the web and on social networks; the shorter a LINK is, the more it will be considered reliable, easy to remember and even more beautiful to show.
+          </p>
+          <p class="intro-p">
+            Imagine seeing a very long url, formed by a long string of letters, numbers and characters posted in your BIO on Instagram or in an email ... done?
+          </p>
+          <p class="intro-p highlight-p">
+            Now, instead, imagine a very short, readable and personalized link... another thing is not it ?!
+          </p>
+          <p class="intro-p prompt-text">So what are you waiting for? Shorten your link SHORT IS BETTER</p>
+        </div>
+      </div>
+
+      <div class="shortener-form-container">
+        <form [formGroup]="quickLinkForm" (ngSubmit)="onQuickShorten()" class="quick-shorten-form">
+          <div class="input-group">
+            <input 
+              type="url" 
+              formControlName="url"
+              placeholder="Paste your long URL here..."
+              class="url-input"
+            />
+            <button 
+              type="submit" 
+              class="btn-shorten"
+              [disabled]="!quickLinkForm.valid || isGenerating()"
+            >
+              Shorten
+            </button>
+          </div>
+          <span *ngIf="quickLinkForm.get('url')?.invalid && quickLinkForm.get('url')?.touched" class="error-text">Please enter a valid URL</span>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
   <section id="features" class="features-section">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Everything you need to succeed</h2>
-        <p class="section-subtitle">Powerful features that help you manage and track your links</p>
+        <h2 class="section-title">More than an URL Shortner<br>Explore our features, and discover our customers</h2>
       </div>
 
       <div class="features-grid">
         <div *ngFor="let feature of features" class="feature-card">
-          <h3 class="feature-title">{{ feature.title }}</h3>
-          <p class="feature-description">{{ feature.description }}</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA Section -->
-  <section class="cta-section">
-    <div class="container">
-      <div class="cta-content">
-        <h2 class="cta-title">Ready to get started?</h2>
-        <p class="cta-description">Join thousands of users who trust our platform</p>
-        <div class="cta-actions">
-          <a routerLink="/auth/signup" class="btn-cta">Create Free Account</a>
-          <button (click)="scrollToFeatures()" class="btn-cta-outline">Learn More</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-left">
-          <span class="logo-text">urls.app</span>
-          <p class="footer-tagline">Shorten. Share. See it all.</p>
-        </div>
-        <div class="footer-right">
-          <div class="footer-links">
-            <a routerLink="/auth/login">Sign In</a>
-            <a routerLink="/auth/signup">Sign Up</a>
-            <a href="https://documenter.getpostman.com/view/40852797/2sBXqQHJno" target="_blank">API Docs</a>
+          <div class="feature-icon-badge">
+            <span class="icon-dot"></span>
+          </div>
+          <div class="align">
+            <h3 class="feature-title">{{ feature.title }}</h3>
+            <p class="feature-description">{{ feature.description }}</p>
           </div>
         </div>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2026 URLs App. All rights reserved.</p>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-banner-card">
+        <div class="cta-left-content">
+          <h2 class="cta-title">Make your URLs stand out with a free link shortener</h2>
+        </div>
+        <div class="cta-right-action">
+          <a routerLink="/auth/signup" class="btn-cta-dark">Register Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-links-left">
+          <a href="https://documenter.getpostman.com/view/40852797/2sBXqQHJno" target="_blank">API Docs</a>
+        </div>
       </div>
     </div>
   </footer>

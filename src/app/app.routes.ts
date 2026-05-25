@@ -23,6 +23,10 @@ export const routes: Routes = [
         loadComponent: () => import('../components/signup/signup').then(m => m.SignupComponent)
       },
       {
+        path: 'forgot-password',
+        loadComponent: () => import('../components/forgot-password/forgot-password').then(m => m.ForgotPasswordComponent)
+      },
+      {
         path: '',
         redirectTo: 'login',
         pathMatch: 'full'

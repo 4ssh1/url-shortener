@@ -1,6 +1,5 @@
 <div class="auth-page">
   <div class="auth-container">
-    <!-- Left Side - Branding -->
     <div class="auth-branding">
       <div class="branding-content">
         <h1 class="brand-title">
@@ -27,7 +26,6 @@
       </div>
     </div>
 
-    <!-- Right Side - Signup Form -->
     <div class="auth-form-wrapper">
       <div class="auth-form-container">
         <div class="form-header">
@@ -43,19 +41,37 @@
         }
 
         <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="auth-form">
-          <!-- Name Field  -->
-          <div class="form-group">
-            <label for="name" class="form-label">Name </label>
-            <input 
-              type="text" 
-              id="name"
-              formControlName="name"
-              class="form-input"
-              placeholder="John Doe"
-            />
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName" class="form-label">First Name</label>
+              <input
+                type="text"
+                id="firstName"
+                formControlName="firstName"
+                class="form-input"
+                [class.input-error]="signupForm.get('firstName')?.invalid && signupForm.get('firstName')?.touched"
+                placeholder="John"
+              />
+              @if (signupForm.get('firstName')?.hasError('required') && signupForm.get('firstName')?.touched) {
+                <span class="error-text">First name is required</span>
+              }
+            </div>
+            <div class="form-group">
+              <label for="lastName" class="form-label">Last Name</label>
+              <input
+                type="text"
+                id="lastName"
+                formControlName="lastName"
+                class="form-input"
+                [class.input-error]="signupForm.get('lastName')?.invalid && signupForm.get('lastName')?.touched"
+                placeholder="Doe"
+              />
+              @if (signupForm.get('lastName')?.hasError('required') && signupForm.get('lastName')?.touched) {
+                <span class="error-text">Last name is required</span>
+              }
+            </div>
           </div>
 
-          <!-- Email Field -->
           <div class="form-group">
             <label for="email" class="form-label">Email</label>
             <input 
@@ -74,7 +90,6 @@
             }
           </div>
 
-          <!-- Password Field -->
           <div class="form-group">
             <label for="password" class="form-label">Password</label>
             <div class="input-with-icon">
@@ -113,7 +128,6 @@
             }
           </div>
 
-          <!-- Confirm Password Field -->
           <div class="form-group">
             <label for="confirmPassword" class="form-label">Confirm Password</label>
             <div class="input-with-icon">
@@ -147,7 +161,6 @@
             }
           </div>
 
-          <!-- Submit Button -->
           <button 
             type="submit" 
             class="btn-submit"
@@ -161,9 +174,8 @@
             }
           </button>
 
-          <!-- Login Link -->
           <div class="form-switch">
-            <span class="switch-text">Already have an account?</span>
+            <span class="switch-text">Already have an account? </span>
             <a routerLink="/auth/login" class="link-primary">Sign in</a>
           </div>
         </form>

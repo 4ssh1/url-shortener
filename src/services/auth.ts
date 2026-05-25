@@ -1,6 +1,7 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, computed, inject, PLATFORM_ID, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 import { Observable, tap, catchError, throwError, BehaviorSubject } from 'rxjs';
 import { environment } from '@/env/environment';
 import {
@@ -33,15 +34,20 @@ export class AuthService {
   isAdmin = computed(() => this.currentUserSignal()?.role === 'admin');
 
   private refreshTokenInProgress$ = new BehaviorSubject<boolean>(false);
+  private isBrowser: boolean;
 
-  constructor() {
-    this.initializeAuth();
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+    
+    // Only attempt to initialize authentication context on the client side
+    if (this.isBrowser) {
+      this.initializeAuth();
+    }
   }
 
   private initializeAuth(): void {
     const token = this.getAccessToken();
     if (token) {
-      // Decode token to get user info (simplified - you might want to validate first)
       try {
         const user = this.decodeToken(token);
         this.currentUserSignal.set(user);
@@ -97,7 +103,6 @@ export class AuthService {
         this.router.navigate(['/auth/login']);
       }),
       catchError(error => {
-        // Even if server logout fails, clear local auth
         this.clearAuth();
         this.router.navigate(['/auth/login']);
         return throwError(() => error);
@@ -170,25 +175,37 @@ export class AuthService {
   }
 
   private clearAuth(): void {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+    if (this.isBrowser) {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+    }
     this.currentUserSignal.set(null);
   }
 
   getAccessToken(): string | null {
-    return localStorage.getItem("accessToken");
+    if (this.isBrowser) {
+      return localStorage.getItem("accessToken");
+    }
+    return null;
   }
 
   private setAccessToken(token: string): void {
-    localStorage.setItem("accessToken", token);
+    if (this.isBrowser) {
+      localStorage.setItem("accessToken", token);
+    }
   }
 
   getRefreshToken(): string | null {
-    return localStorage.getItem("refreshToken");
+    if (this.isBrowser) {
+      return localStorage.getItem("refreshToken");
+    }
+    return null;
   }
 
   private setRefreshToken(token: string): void {
-    localStorage.setItem("refreshToken", token);
+    if (this.isBrowser) {
+      localStorage.setItem("refreshToken", token);
+    }
   }
 
   private decodeToken(token: string): User {
@@ -197,7 +214,8 @@ export class AuthService {
       return {
         id: payload.id || payload.userId,
         email: payload.email,
-        name: payload.name,
+        firstName: payload.firstName,
+        lastName: payload.lastName,
         role: payload.role || 'user'
       };
     } catch {

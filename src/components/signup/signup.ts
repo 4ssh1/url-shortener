@@ -28,7 +28,8 @@ export class SignupComponent {
     const urlParam = this.route.snapshot.queryParams['url'];
     
     this.signupForm = this.fb.group({
-      name: [''],
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8), CustomValidators.passwordStrength()]],
       confirmPassword: ['', [Validators.required]]
