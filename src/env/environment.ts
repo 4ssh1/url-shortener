@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:3000/api',
-    appUrl: 'http://localhost:4200'
+    apiUrl: 'https://url-shortener-s5n5.onrender.com/api/v1',
+    appUrl: 'https://url-shortener-s5n5.onrender.com'
 }
