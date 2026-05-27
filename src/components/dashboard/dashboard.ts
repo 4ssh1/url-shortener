@@ -40,6 +40,7 @@ export class DashboardComponent implements OnInit {
 
   constructor() {
     this.createLinkForm = this.fb.group({
+      title: ['', [Validators.required]],
       url: ['', [Validators.required, CustomValidators.url()]],
       customBackHalf: ['', [CustomValidators.backHalf()]]
     });
@@ -53,9 +54,6 @@ export class DashboardComponent implements OnInit {
     this.linkService.getMyLinks().subscribe({
       next: () => {
         console.log('Links loaded:', this.links());
-        console.log('Total clicks:', this.totalClicks());
-        const avgClicks = this.links().length > 0 ? (this.totalClicks() / this.links().length).toFixed(1) : '0';
-        console.log('Average clicks per link:', avgClicks);
       },
       error: (error) => {
         console.error('Error loading links:', error);
@@ -81,9 +79,10 @@ export class DashboardComponent implements OnInit {
   onCreateLink(): void {
     if (this.createLinkForm.valid) {
       const request = {
-        url: this.createLinkForm.value.url,
+        title: this.createLinkForm.value.title,
+        destination: this.createLinkForm.value.url,
         ...(this.showCustomBackHalf() && this.createLinkForm.value.customBackHalf && {
-          customBackHalf: this.createLinkForm.value.customBackHalf
+          backHalf: this.createLinkForm.value.customBackHalf
         })
       };
 

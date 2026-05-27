@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CustomValidators} from "@/utils/validator";
+import { GuestLinkService } from '@/services/guest';
 
 @Component({
   selector: 'app-landing',
@@ -15,6 +16,8 @@ export class LandingComponent {
   quickLinkForm: FormGroup;
   generatedLink = signal<string | null>(null);
   isGenerating = signal(false);
+  copySuccess = signal(false);
+  errorMessage = signal<string | null>(null);
 
   features = [
     {
@@ -35,16 +38,10 @@ export class LandingComponent {
     }
   ];
 
-  stats = [
-    { value: '1M+', label: 'Links Shortened' },
-    { value: '50M+', label: 'Clicks Tracked' },
-    { value: '10K+', label: 'Active Users' },
-    { value: '99.9%', label: 'Uptime' }
-  ];
-
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private guestLinkService: GuestLinkService
   ) {
     this.quickLinkForm = this.fb.group({
       url: ['', [Validators.required, CustomValidators.url()]]
@@ -53,11 +50,47 @@ export class LandingComponent {
 
   onQuickShorten(): void {
     if (this.quickLinkForm.valid) {
-
-      this.router.navigate(['/auth/signup'], {
-        queryParams: { url: this.quickLinkForm.value.url }
+      this.isGenerating.set(true);
+      this.errorMessage.set(null);
+      
+      this.guestLinkService.createGuestLink({
+        destination: this.quickLinkForm.value.url
+      }).subscribe({
+        next: (response) => {
+          this.generatedLink.set(response.shortLink);
+          this.isGenerating.set(false);
+        },
+        error: (err) => {
+          this.isGenerating.set(false);
+          if (err.status === 403) {
+            this.errorMessage.set('You have used your free creation! Redirecting to signup...');
+            setTimeout(() => {
+              this.router.navigate(['/auth/signup'], {
+                queryParams: { url: this.quickLinkForm.value.url }
+              });
+            }, 2500);
+          } else {
+            this.errorMessage.set('An error occurred while generating your link.');
+          }
+        }
       });
     }
+  }
+
+  copyToClipboard(): void {
+    const link = this.generatedLink();
+    if (link) {
+      navigator.clipboard.writeText(link).then(() => {
+        this.copySuccess.set(true);
+        setTimeout(() => this.copySuccess.set(false), 2000);
+      });
+    }
+  }
+
+  closeModal(): void {
+    this.generatedLink.set(null);
+    this.copySuccess.set(false);
+    this.quickLinkForm.reset();
   }
 
   scrollToFeatures(): void {

@@ -117,6 +117,7 @@
             </button>
           </div>
           <span *ngIf="quickLinkForm.get('url')?.invalid && quickLinkForm.get('url')?.touched" class="error-text">Please enter a valid URL</span>
+          <span *ngIf="errorMessage()" class="error-text" style="margin-top: 0.5rem; display: block;">{{ errorMessage() }}</span>
         </form>
       </div>
 
@@ -165,4 +166,27 @@
       </div>
     </div>
   </footer>
+
+  <div class="modal-overlay" *ngIf="generatedLink()">
+    <div class="modal-content">
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+      
+      <div class="modal-header">
+        <h3>Your Link is Ready! 🎉</h3>
+        <p>Copy your shortened link below. Sign up to customize and track your link analytics!</p>
+      </div>
+
+      <div class="copy-box">
+        <input type="text" [value]="generatedLink()" readonly />
+        <button class="btn-copy" (click)="copyToClipboard()" [class.success]="copySuccess()">
+          {{ copySuccess() ? 'Copied!' : 'Copy' }}
+        </button>
+      </div>
+
+      <div class="modal-actions">
+        <a routerLink="/auth/signup" class="btn-primary">Create Free Account</a>
+      </div>
+    </div>
+  </div>
+
 </div>
