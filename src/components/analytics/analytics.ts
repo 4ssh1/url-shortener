@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LinkService } from '@/services/link';
 import { TimeAgoPipe } from '@/pipes/time-format';
 import { AuthService } from '@/services/auth';
@@ -8,7 +8,7 @@ import { AuthService } from '@/services/auth';
 @Component({
   selector: 'app-analytics',
   standalone: true,
-  imports: [CommonModule, TimeAgoPipe],
+  imports: [CommonModule, TimeAgoPipe, RouterLink],
   templateUrl: './analytics.html',
   styleUrl: './analytics.scss'
 })

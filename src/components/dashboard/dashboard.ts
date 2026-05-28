@@ -1,7 +1,7 @@
 import { Component, inject, signal, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@/services/auth';
 import { LinkService } from '@/services/link';
 import { CustomValidators } from '@/utils/validator';
@@ -11,7 +11,7 @@ import { Link } from '@/interfaces/link';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TimeAgoPipe],
+  imports: [CommonModule, ReactiveFormsModule, TimeAgoPipe, RouterLink],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
