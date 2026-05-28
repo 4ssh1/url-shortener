@@ -47,6 +47,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authService.resetState();
     this.showCreateForm.set(false);
     this.showCustomBackHalf.set(false);
     this.copiedLinkId.set(null);

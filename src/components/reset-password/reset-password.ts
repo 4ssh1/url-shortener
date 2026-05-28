@@ -28,6 +28,7 @@ export class ResetPasswordComponent implements OnInit {
   showConfirmPassword = signal(false);
 
   ngOnInit(): void {
+    this.authService.resetState();
     // Read the recovery token parsed from the URL string
     this.token = this.route.snapshot.queryParamMap.get('token');
     this.isLoading.set(false);

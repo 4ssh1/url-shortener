@@ -25,6 +25,7 @@ export class SignupComponent implements OnInit {
   errorMessage = this.authService.error;
 
   ngOnInit(): void {
+    this.authService.resetState();
     const urlParam = this.route.snapshot.queryParams['url'];
     this.signupForm = this.fb.group({
       firstName: ['', [Validators.required]],

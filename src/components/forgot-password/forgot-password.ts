@@ -20,6 +20,7 @@ export class ForgotPasswordComponent implements OnInit {
   constructor(private fb: FormBuilder, private authService: AuthService) {}
 
   ngOnInit(): void {
+    this.authService.resetState();
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
     });

@@ -216,4 +216,9 @@ export class AuthService {
   clearError(): void {
     this.errorSignal.set(null);
   }
+
+  resetState(): void {
+    this.loadingSignal.set(false);
+    this.errorSignal.set(null);
+  }
 }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LinkService } from '@/services/link';
 import { TimeAgoPipe } from '@/pipes/time-format';
+import { AuthService } from '@/services/auth';
 
 @Component({
   selector: 'app-analytics',
@@ -15,6 +16,7 @@ export class AnalyticsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private linkService = inject(LinkService);
+  private authService = inject(AuthService);
 
   // State
   selectedLink = this.linkService.selectedLink;
@@ -45,6 +47,7 @@ export class AnalyticsComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.authService.resetState();
     this.copiedLink.set(false);
     const linkId = this.route.snapshot.paramMap.get('id');
     if (linkId) {
@@ -68,7 +71,7 @@ export class AnalyticsComponent implements OnInit {
     if (link) {
       const shortUrl = this.linkService.getShortUrl(link.backHalf);
       const success = await this.linkService.copyToClipboard(shortUrl);
-      
+
       if (success) {
         this.copiedLink.set(true);
         setTimeout(() => this.copiedLink.set(false), 2000);

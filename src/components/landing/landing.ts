@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CustomValidators} from "@/utils/validator";
 import { GuestLinkService } from '@/services/guest';
+import { AuthService } from '@/services/auth';
 
 @Component({
   selector: 'app-landing',
@@ -41,10 +42,12 @@ export class LandingComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private guestLinkService: GuestLinkService
+    private guestLinkService: GuestLinkService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.authService.resetState();
     this.quickLinkForm = this.fb.group({
       url: ['', [Validators.required, CustomValidators.url()]]
     });
