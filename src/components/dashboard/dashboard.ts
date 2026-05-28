@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit {
   error = this.linkService.error;
   
   // Form signals
-  createLinkForm: FormGroup;
+  createLinkForm!: FormGroup;
   showCreateForm = signal(false);
   showCustomBackHalf = signal(false);
   copiedLinkId = signal<string | null>(null);
@@ -47,6 +47,10 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.showCreateForm.set(false);
+    this.showCustomBackHalf.set(false);
+    this.copiedLinkId.set(null);
+    this.deletingLinkId.set(null);
     this.loadLinks();
   }
 

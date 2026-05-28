@@ -30,11 +30,14 @@ export class ResetPasswordComponent implements OnInit {
   ngOnInit(): void {
     // Read the recovery token parsed from the URL string
     this.token = this.route.snapshot.queryParamMap.get('token');
-    
+    this.isLoading.set(false);
+    this.isResetComplete.set(false);
+    this.errorMessage.set(null);
+    this.showPassword.set(false);
+    this.showConfirmPassword.set(false);
     if (!this.token) {
       this.errorMessage.set('Invalid or expired password reset link.');
     }
-
     this.initForm();
   }
 

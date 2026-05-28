@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
@@ -12,21 +12,20 @@ import { CustomValidators } from '@/utils/validator';
   templateUrl: './signup.html',
   styleUrl: './signup.scss'
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  signupForm: FormGroup;
+  signupForm!: FormGroup;
   showPassword = signal(false);
   showConfirmPassword = signal(false);
   isLoading = this.authService.loading;
   errorMessage = this.authService.error;
 
-  constructor() {
+  ngOnInit(): void {
     const urlParam = this.route.snapshot.queryParams['url'];
-    
     this.signupForm = this.fb.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
@@ -36,6 +35,11 @@ export class SignupComponent {
     }, {
       validators: CustomValidators.matchFields('password', 'confirmPassword')
     });
+    this.showPassword.set(false);
+    this.showConfirmPassword.set(false);
+    // If you want to reset loading and error, do so here if not managed by AuthService
+    // this.isLoading.set(false);
+    // this.errorMessage.set(null);
   }
 
   togglePasswordVisibility(field: 'password' | 'confirmPassword'): void {

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -12,8 +12,8 @@ import { GuestLinkService } from '@/services/guest';
   templateUrl: './landing.html',
   styleUrl: './landing.scss'
 })
-export class LandingComponent {
-  quickLinkForm: FormGroup;
+export class LandingComponent implements OnInit {
+  quickLinkForm!: FormGroup;
   generatedLink = signal<string | null>(null);
   isGenerating = signal(false);
   copySuccess = signal(false);
@@ -42,10 +42,16 @@ export class LandingComponent {
     private fb: FormBuilder,
     private router: Router,
     private guestLinkService: GuestLinkService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.quickLinkForm = this.fb.group({
       url: ['', [Validators.required, CustomValidators.url()]]
     });
+    this.generatedLink.set(null);
+    this.isGenerating.set(false);
+    this.copySuccess.set(false);
+    this.errorMessage.set(null);
   }
 
   onQuickShorten(): void {

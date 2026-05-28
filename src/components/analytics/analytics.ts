@@ -45,6 +45,7 @@ export class AnalyticsComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.copiedLink.set(false);
     const linkId = this.route.snapshot.paramMap.get('id');
     if (linkId) {
       this.loadAnalytics(linkId);
