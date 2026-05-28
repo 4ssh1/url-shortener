@@ -8,17 +8,14 @@
           </svg>
           Back to Dashboard
         </button>
-        
-        <div class="logo">
-          <span class="logo-text">Snapit</span>
-        </div>
+        <div class="logo"><span class="logo-text">Snapit</span></div>
       </div>
     </div>
   </header>
 
   <main class="analytics-main">
     <div class="container">
-      @if (loading() && !analytics()) {
+      @if (loading() && !stats()) {
         <div class="loading-state">
           <span class="spinner-large"></span>
           <p>Loading real-time analytics...</p>
@@ -27,63 +24,57 @@
         <div class="error-state">
           <div class="error-icon-box">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="12" y1="8" x2="12" y2="12"/>
-              <line x1="12" y1="16" x2="12.01" y2="16"/>
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
           </div>
           <h3>Failed to load analytics</h3>
           <p>{{ error() }}</p>
           <button class="btn-retry" (click)="goBack()">Go Back</button>
         </div>
-      } @else if (selectedLink()) {
+      } @else if (selectedLink() || stats()) {
         
-        <section class="link-header">
-          <div class="link-info-card">
-            <div class="link-details">
-              <div class="link-short-section">
-                <a [href]="getShortUrl(selectedLink()!.backHalf)" target="_blank" class="short-url">
-                  {{ getShortUrl(selectedLink()!.backHalf) }}
-                </a>
-                <button 
-                  class="btn-copy-badge"
-                  (click)="copyLink()"
-                  [class.copied]="copiedLink()"
-                >
-                  @if (copiedLink()) {
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                      <polyline points="20 6 9 17 4 12"/>
+        @if (selectedLink()) {
+          <section class="link-header">
+            <div class="link-info-card">
+              <div class="link-details">
+                <div class="link-short-section">
+                  <a [href]="getShortUrl(selectedLink()!.backHalf)" target="_blank" class="short-url">
+                    {{ getShortUrl(selectedLink()!.backHalf) }}
+                  </a>
+                  <button class="btn-copy-badge" (click)="copyLink()" [class.copied]="copiedLink()">
+                    @if (copiedLink()) {
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      <span>Copied</span>
+                    } @else {
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                      </svg>
+                      <span>Copy</span>
+                    }
+                  </button>
+                </div>
+                
+                <div class="link-original">
+                  <span class="label">Original Destination:</span>
+                  <span class="url">{{ selectedLink()!.destination }}</span>
+                </div>
+                
+                <div class="link-meta">
+                  <span class="meta-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                     </svg>
-                    <span>Copied</span>
-                  } @else {
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                      <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
-                    </svg>
-                    <span>Copy</span>
-                  }
-                </button>
-              </div>
-              
-              <div class="link-original">
-                <span class="label">Original Destination:</span>
-                <span class="url">{{ selectedLink()!.destination }}</span>
-              </div>
-              
-              <div class="link-meta">
-                <span class="meta-item">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <polyline points="12 6 12 12 16 14"/>
-                  </svg>
-                  Created {{ selectedLink()!.createdAt | timeAgo }}
-                </span>
+                    Created {{ selectedLink()!.createdAt | timeAgo }}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        }
 
-        @if (analytics()) {
+        @if (stats()) {
           <section class="stats-overview">
             <h2 class="section-title">Overview</h2>
             <div class="stats-grid">
@@ -98,7 +89,7 @@
                     </svg>
                   </div>
                 </div>
-                <div class="stat-value">{{ analytics()!.totalClicks }}</div>
+                <div class="stat-value">{{ stats()!.totalClicks }}</div>
               </div>
 
               <div class="stat-card">
@@ -113,7 +104,7 @@
                     </svg>
                   </div>
                 </div>
-                <div class="stat-value">{{ analytics()!.uniqueClicks }}</div>
+                <div class="stat-value">{{ stats()!.uniqueClicks }}</div>
               </div>
 
               <div class="stat-card">
@@ -125,7 +116,7 @@
                     </svg>
                   </div>
                 </div>
-                <div class="stat-value truncate">{{ topCountry()?.country || 'N/A' }}</div>
+                <div class="stat-value truncate">{{ topCountry() }}</div>
               </div>
 
               <div class="stat-card">
@@ -138,7 +129,7 @@
                     </svg>
                   </div>
                 </div>
-                <div class="stat-value truncate">{{ topDevice()?.device || 'N/A' }}</div>
+                <div class="stat-value truncate">{{ topDevice() }}</div>
               </div>
 
             </div>
@@ -146,17 +137,14 @@
 
           <div class="charts-grid">
             
-            @if (analytics()!.clicksByDate.length > 0) {
-              <section class="chart-card">
-                <h3 class="chart-title">Clicks Over Time</h3>
+            <section class="chart-card">
+              <h3 class="chart-title">Clicks Over Time</h3>
+              @if (stats()!.clicksByDate.length > 0) {
                 <div class="bar-chart">
-                  @for (item of analytics()!.clicksByDate; track item.date) {
+                  @for (item of stats()!.clicksByDate; track item.date) {
                     <div class="bar-item">
                       <div class="bar-wrapper">
-                        <div 
-                          class="bar-fill"
-                          [style.height.%]="getPercentage(item.clicks, analytics()!.totalClicks)"
-                        ></div>
+                        <div class="bar-fill" [style.height.%]="getPercentage(item.clicks, stats()!.totalClicks)"></div>
                       </div>
                       <div class="bar-label">
                         <span class="bar-value">{{ item.clicks }}</span>
@@ -165,74 +153,73 @@
                     </div>
                   }
                 </div>
-              </section>
-            }
+              } @else {
+                <div class="empty-chart-placeholder">No click history logged yet.</div>
+              }
+            </section>
 
-            @if (analytics()!.clicksByCountry.length > 0) {
-              <section class="chart-card">
-                <h3 class="chart-title">Top Countries</h3>
+            <section class="chart-card">
+              <h3 class="chart-title">Top Countries</h3>
+              @if (stats()!.clicksByCountry.length > 0) {
                 <div class="list-chart">
-                  @for (item of analytics()!.clicksByCountry.slice(0, 5); track item.country) {
+                  @for (item of stats()!.clicksByCountry.slice(0, 5); track item.country) {
                     <div class="list-item">
                       <div class="list-label">
                         <span class="country-name">{{ item.country }}</span>
                       </div>
                       <div class="list-bar-wrapper">
-                        <div 
-                          class="list-bar country"
-                          [style.width.%]="getPercentage(item.clicks, analytics()!.totalClicks)"
-                        ></div>
+                        <div class="list-bar country" [style.width.%]="getPercentage(item.clicks, stats()!.totalClicks)"></div>
                       </div>
                       <div class="list-value">{{ item.clicks }}</div>
                     </div>
                   }
                 </div>
-              </section>
-            }
+              } @else {
+                <div class="empty-chart-placeholder">No geographic metrics available.</div>
+              }
+            </section>
 
-            @if (analytics()!.clicksByDevice.length > 0) {
-              <section class="chart-card">
-                <h3 class="chart-title">Devices</h3>
+            <section class="chart-card">
+              <h3 class="chart-title">Devices</h3>
+              @if (stats()!.clicksByDevice.length > 0) {
                 <div class="list-chart">
-                  @for (item of analytics()!.clicksByDevice; track item.device) {
+                  @for (item of stats()!.clicksByDevice; track item.device) {
                     <div class="list-item">
                       <div class="list-label">
                         <span>{{ item.device }}</span>
                       </div>
                       <div class="list-bar-wrapper">
-                        <div 
-                          class="list-bar device"
-                          [style.width.%]="getPercentage(item.clicks, analytics()!.totalClicks)"
-                        ></div>
+                        <div class="list-bar device" [style.width.%]="getPercentage(item.clicks, stats()!.totalClicks)"></div>
                       </div>
                       <div class="list-value">{{ item.clicks }}</div>
                     </div>
                   }
                 </div>
-              </section>
-            }
+              } @else {
+                <div class="empty-chart-placeholder">No device records found.</div>
+              }
+            </section>
 
-            @if (analytics()!.clicksByBrowser.length > 0) {
-              <section class="chart-card">
-                <h3 class="chart-title">Browsers</h3>
+            <section class="chart-card">
+              <h3 class="chart-title">Browsers</h3>
+              @if (stats()!.clicksByBrowser.length > 0) {
                 <div class="list-chart">
-                  @for (item of analytics()!.clicksByBrowser; track item.browser) {
+                  @for (item of stats()!.clicksByBrowser; track item.browser) {
                     <div class="list-item">
                       <div class="list-label">
                         <span>{{ item.browser }}</span>
                       </div>
                       <div class="list-bar-wrapper">
-                        <div 
-                          class="list-bar browser"
-                          [style.width.%]="getPercentage(item.clicks, analytics()!.totalClicks)"
-                        ></div>
+                        <div class="list-bar browser" [style.width.%]="getPercentage(item.clicks, stats()!.totalClicks)"></div>
                       </div>
                       <div class="list-value">{{ item.clicks }}</div>
                     </div>
                   }
                 </div>
-              </section>
-            }
+              } @else {
+                <div class="empty-chart-placeholder">No browser data captured.</div>
+              }
+            </section>
           </div>
         }
       }

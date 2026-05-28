@@ -18,32 +18,36 @@ export class AnalyticsComponent implements OnInit {
   private linkService = inject(LinkService);
   private authService = inject(AuthService);
 
-  // State
+  // Core Signals
   selectedLink = this.linkService.selectedLink;
   analytics = this.linkService.analytics;
   loading = this.linkService.loading;
   error = this.linkService.error;
 
-  // Copy state
   copiedLink = signal(false);
 
-  // Computed
+  stats = computed(() => {
+    const rawData = this.analytics() as any;
+    if (!rawData) return null;
+    return rawData.analytics ? rawData.analytics : rawData;
+  });
+
   topCountry = computed(() => {
-    const analytics = this.analytics();
-    if (!analytics?.clicksByCountry?.length) return null;
-    return analytics.clicksByCountry[0];
+    const statsData = this.stats();
+    if (!statsData?.clicksByCountry?.length) return 'N/A';
+    return statsData.clicksByCountry[0].country || 'N/A';
   });
 
   topDevice = computed(() => {
-    const analytics = this.analytics();
-    if (!analytics?.clicksByDevice?.length) return null;
-    return analytics.clicksByDevice[0];
+    const statsData = this.stats();
+    if (!statsData?.clicksByDevice?.length) return 'N/A';
+    return statsData.clicksByDevice[0].device || 'N/A';
   });
 
   topBrowser = computed(() => {
-    const analytics = this.analytics();
-    if (!analytics?.clicksByBrowser?.length) return null;
-    return analytics.clicksByBrowser[0];
+    const statsData = this.stats();
+    if (!statsData?.clicksByBrowser?.length) return 'N/A';
+    return statsData.clicksByBrowser[0].browser || 'N/A';
   });
 
   ngOnInit(): void {
@@ -59,6 +63,15 @@ export class AnalyticsComponent implements OnInit {
 
   loadAnalytics(linkId: string): void {
     this.linkService.getAnalytics(linkId).subscribe({
+      next: (res: any) => {
+        if (res && res.link && !this.selectedLink()) {
+          if (typeof (this.linkService.selectedLink as any)?.set === 'function') {
+            (this.linkService.selectedLink as any).set(res.link);
+          } else {
+            (this.linkService as any).selectedLink = signal(res.link);
+          }
+        }
+      },
       error: (error) => {
         console.error('Failed to load analytics:', error);
         this.router.navigate(['/dashboard']);
@@ -85,45 +98,6 @@ export class AnalyticsComponent implements OnInit {
 
   getPercentage(value: number, total: number): number {
     return total > 0 ? Math.round((value / total) * 100) : 0;
-  }
-
-  getCountryFlag(country: string): string {
-    const flags: { [key: string]: string } = {
-      'United States': '🇺🇸',
-      'United Kingdom': '🇬🇧',
-      'Canada': '🇨🇦',
-      'Australia': '🇦🇺',
-      'Germany': '🇩🇪',
-      'France': '🇫🇷',
-      'India': '🇮🇳',
-      'Nigeria': '🇳🇬',
-      'Brazil': '🇧🇷',
-      'China': '🇨🇳',
-      'Japan': '🇯🇵',
-    };
-    return flags[country] || '🌍';
-  }
-
-  getDeviceIcon(device: string): string {
-    const icons: { [key: string]: string } = {
-      'Desktop': '💻',
-      'Mobile': '📱',
-      'Tablet': '📱',
-      'Other': '🖥️'
-    };
-    return icons[device] || '🖥️';
-  }
-
-  getBrowserIcon(browser: string): string {
-    const icons: { [key: string]: string } = {
-      'Chrome': '🔵',
-      'Firefox': '🟠',
-      'Safari': '🔵',
-      'Edge': '🔵',
-      'Opera': '🔴',
-      'Other': '🌐'
-    };
-    return icons[browser] || '🌐';
   }
 
   goBack(): void {
