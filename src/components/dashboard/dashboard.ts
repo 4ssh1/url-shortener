@@ -40,7 +40,6 @@ export class DashboardComponent implements OnInit {
 
   constructor() {
     this.createLinkForm = this.fb.group({
-      title: ['', [Validators.required]],
       url: ['', [Validators.required, CustomValidators.url()]],
       customBackHalf: ['', [CustomValidators.backHalf()]]
     });
@@ -84,7 +83,6 @@ export class DashboardComponent implements OnInit {
   onCreateLink(): void {
     if (this.createLinkForm.valid) {
       const request = {
-        title: this.createLinkForm.value.title,
         destination: this.createLinkForm.value.url,
         ...(this.showCustomBackHalf() && this.createLinkForm.value.customBackHalf && {
           backHalf: this.createLinkForm.value.customBackHalf

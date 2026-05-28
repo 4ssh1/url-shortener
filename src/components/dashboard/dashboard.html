@@ -52,21 +52,6 @@
             </div>
             
             <form [formGroup]="createLinkForm" (ngSubmit)="onCreateLink()">
-              
-              <div class="form-group">
-                <label class="form-label">Title</label>
-                <input 
-                  type="text"
-                  formControlName="title"
-                  class="form-input"
-                  [class.input-error]="createLinkForm.get('title')?.invalid && createLinkForm.get('title')?.touched"
-                  placeholder="e.g., Marketing Campaign Q2"
-                />
-                @if (createLinkForm.get('title')?.hasError('required') && createLinkForm.get('title')?.touched) {
-                  <span class="error-text">Title is required</span>
-                }
-              </div>
-
               <div class="form-group">
                 <label class="form-label">Destination URL</label>
                 <input 
