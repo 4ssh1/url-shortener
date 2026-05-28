@@ -51,6 +51,10 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('../components/analytics/analytics').then(m => m.AnalyticsComponent)
   },
+    {
+      path: ':backHalf',
+      loadComponent: () => import('../components/redirect/redirect').then(m => m.RedirectComponent)
+    },
 
   // Wildcard - redirect to home
   {

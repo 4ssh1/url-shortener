@@ -11,11 +11,11 @@ import {
   SignupCredentials,
   RefreshTokenResponse,
   ForgotPasswordRequest,
-  ResetPasswordRequest
+  ResetPasswordRequest,
 } from '../interfaces/user';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private http = inject(HttpClient);
@@ -38,7 +38,7 @@ export class AuthService {
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
-    
+
     // Only attempt to initialize authentication context on the client side
     if (this.isBrowser) {
       this.initializeAuth();
@@ -64,35 +64,39 @@ export class AuthService {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/signup`, credentials).pipe(
-      tap(response => {
-        if (response.success) {
-          this.handleAuthSuccess(response);
-        }
-      }),
-      catchError(error => {
-        this.errorSignal.set(error.error?.message || 'Signup failed');
-        this.loadingSignal.set(false);
-        return throwError(() => error);
+    return this.http
+      .post<AuthResponse>(`${environment.apiUrl}/auth/signup`, credentials, {
+        withCredentials: true,
       })
-    );
+      .pipe(
+        tap((response) => {
+          if (response.success) {
+            this.handleAuthSuccess(response);
+          }
+        }),
+        catchError((error) => {
+          this.errorSignal.set(error.error?.message || 'Signup failed');
+          this.loadingSignal.set(false);
+          return throwError(() => error);
+        }),
+      );
   }
 
   login(credentials: LoginCredentials): Observable<AuthResponse> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials).pipe(
-      tap(response => {
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials, { withCredentials: true }).pipe(
+      tap((response) => {
         if (response.success) {
           this.handleAuthSuccess(response);
         }
       }),
-      catchError(error => {
+      catchError((error) => {
         this.errorSignal.set(error.error?.message || 'Login failed');
         this.loadingSignal.set(false);
         return throwError(() => error);
-      })
+      }),
     );
   }
 
@@ -102,41 +106,47 @@ export class AuthService {
         this.clearAuth();
         this.router.navigate(['/auth/login']);
       }),
-      catchError(error => {
+      catchError((error) => {
         this.clearAuth();
         this.router.navigate(['/auth/login']);
         return throwError(() => error);
-      })
+      }),
     );
   }
 
   refreshToken(): Observable<RefreshTokenResponse> {
     this.refreshTokenInProgress$.next(true);
 
-    return this.http.post<RefreshTokenResponse>(`${environment.apiUrl}/auth/refresh`, {}, {
-      withCredentials: true
-    }).pipe(
-      tap(response => {
-        if (response.success) {
-          this.setAccessToken(response.data.accessToken);
-          
-          try {
-            const user = this.decodeToken(response.data.accessToken);
-            this.currentUserSignal.set(user);
-          } catch (e) {
-            console.error('Failed to parse user payload from refreshed token:', e);
-          }
+    return this.http
+      .post<RefreshTokenResponse>(
+        `${environment.apiUrl}/auth/refresh`,
+        {},
+        {
+          withCredentials: true,
+        },
+      )
+      .pipe(
+        tap((response) => {
+          if (response.success) {
+            this.setAccessToken(response.data.accessToken);
 
+            try {
+              const user = this.decodeToken(response.data.accessToken);
+              this.currentUserSignal.set(user);
+            } catch (e) {
+              console.error('Failed to parse user payload from refreshed token:', e);
+            }
+
+            this.refreshTokenInProgress$.next(false);
+          }
+        }),
+        catchError((error) => {
           this.refreshTokenInProgress$.next(false);
-        }
-      }),
-      catchError(error => {
-        this.refreshTokenInProgress$.next(false);
-        this.clearAuth();
-        this.router.navigate(['/auth/login']);
-        return throwError(() => error);
-      })
-    );
+          this.clearAuth();
+          this.router.navigate(['/auth/login']);
+          return throwError(() => error);
+        }),
+      );
   }
 
   forgotPassword(request: ForgotPasswordRequest): Observable<any> {
@@ -145,11 +155,11 @@ export class AuthService {
 
     return this.http.post(`${environment.apiUrl}/auth/forgot-password`, request).pipe(
       tap(() => this.loadingSignal.set(false)),
-      catchError(error => {
+      catchError((error) => {
         this.errorSignal.set(error.error?.message || 'Request failed');
         this.loadingSignal.set(false);
         return throwError(() => error);
-      })
+      }),
     );
   }
 
@@ -159,11 +169,11 @@ export class AuthService {
 
     return this.http.post(`${environment.apiUrl}/auth/reset-password`, request).pipe(
       tap(() => this.loadingSignal.set(false)),
-      catchError(error => {
+      catchError((error) => {
         this.errorSignal.set(error.error?.message || 'Reset failed');
         this.loadingSignal.set(false);
         return throwError(() => error);
-      })
+      }),
     );
   }
 
@@ -176,21 +186,21 @@ export class AuthService {
 
   private clearAuth(): void {
     if (this.isBrowser) {
-      localStorage.removeItem("accessToken");
+      localStorage.removeItem('accessToken');
     }
     this.currentUserSignal.set(null);
   }
 
   getAccessToken(): string | null {
     if (this.isBrowser) {
-      return localStorage.getItem("accessToken");
+      return localStorage.getItem('accessToken');
     }
     return null;
   }
 
   private setAccessToken(token: string): void {
     if (this.isBrowser) {
-      localStorage.setItem("accessToken", token);
+      localStorage.setItem('accessToken', token);
     }
   }
 
@@ -202,7 +212,7 @@ export class AuthService {
         email: payload.email,
         firstName: payload.firstName,
         lastName: payload.lastName,
-        role: payload.role || 'user'
+        role: payload.role || 'user',
       };
     } catch {
       throw new Error('Invalid token');
