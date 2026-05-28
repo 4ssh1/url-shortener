@@ -194,13 +194,6 @@ export class AuthService {
     }
   }
 
-  getRefreshToken(): string | null {
-    return null;
-  }
-
-  private setRefreshToken(token: string): void {
-  }
-
   private decodeToken(token: string): User {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));

@@ -28,7 +28,7 @@ export class ForgotPasswordComponent {
       this.isLoading.set(true);
       this.errorMessage.set(null);
 
-      this.authService.forgotPassword(this.forgotPasswordForm.value.email).subscribe({
+      this.authService.forgotPassword({ email: this.forgotPasswordForm.value.email }).subscribe({
         next: () => {
           this.isLoading.set(false);
           this.isEmailSent.set(true);
