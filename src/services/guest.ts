@@ -9,13 +9,16 @@ export interface GuestLinkRequest {
 }
 
 export interface GuestLinkResponse {
-  details: {
-    backHalf: string;
-    destination: string;
-    shortLink: string;
-    expiresIn?: string;
+  success: boolean;
+  message: string;
+  data: {
+    details: {
+      backHalf: string;
+      destination: string;
+      expiresIn: string;
+    };
+    shortUrl: string;
   };
-  shortUrl: string;
 }
 
 @Injectable({
