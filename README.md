@@ -13,6 +13,8 @@
 
 The application is built on a unidirectional data flow model leveraging **Angular Signals** for state management and **RxJS** for asynchronous network operations.
 
+**Backend repo: https://github.com/4ssh1/url-shortener-api**
+
 * **State Management:** Local component state and global service state rely on Angular Signals (`signal`, `computed`). This eliminates memory leaks associated with unhandled subscriptions and forces synchronous DOM updates.
 * **Network Layer:** `HttpClient` wraps all API requests in RxJS Observables. Responses are piped through `tap` operators to mutate Signal state before resolving.
 * **Routing Security:** Route access is strictly evaluated at the navigation phase using functional Angular Route Guards (`canActivate`).
