@@ -66,7 +66,7 @@ export class LandingComponent implements OnInit {
         destination: this.quickLinkForm.value.url
       }).subscribe({
         next: (response) => {
-          this.generatedLink.set(response.shortLink);
+          this.generatedLink.set(response.details.shortLink);
           this.isGenerating.set(false);
         },
         error: (err) => {
